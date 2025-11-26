@@ -66,7 +66,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Link
-                href="/restaurants"
+                href="/propiedades"
                 className="rounded-lg bg-zinc-900 px-8 py-3 font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
               >
                 Ver Propiedades
@@ -189,7 +189,7 @@ export default function HomePage() {
               Descubre las diferentes propiedades que tenemos para ti y encuentra tu próximo hogar con Inmobiliaria William Cardona.
             </p>
             <Link
-              href="/restaurants"
+              href="/propiedades"
               className="inline-block rounded-lg bg-zinc-900 px-8 py-3 font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
             >
               Ver Propiedades

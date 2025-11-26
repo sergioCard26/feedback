@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 
 // Mock data - propiedades en Manizales (mezcla de venta y arrendamiento)
 const mockProperties = [
@@ -10,20 +13,10 @@ const mockProperties = [
     listingType: 'Arriendo',
     price: 850000, // COP / mes
     ranking: 1,
-    averageRating: 4.8,
-    totalFeedbacks: 34,
-    address: ' Centro, Manizales',
+    address: 'Centro, Manizales',
     imageUrl: '/propiedades/propiedad1/tamanaco.jpg',
     hasPromotion: false,
-    recentReviews: [
-      {
-        id: 'r1',
-        userName: 'Inquilino Feliz',
-        rating: 5,
-        comment: 'Lugar muy acogedor y cerca al centro, ideal para estudiantes.',
-        timeAgo: 'Hace 2 días',
-      },
-    ],
+    details: 'Estudio de 35m², piso 8, amoblado, acceso a gimnasio y zona común. Ideal para estudiantes o profesionales.',
   },
   {
     id: '2',
@@ -32,20 +25,10 @@ const mockProperties = [
     listingType: 'Venta',
     price: 420000000, // COP
     ranking: 2,
-    averageRating: 4.7,
-    totalFeedbacks: 18,
     address: 'Carrera 21 #30-10, Barrio Chipre, Manizales',
     imageUrl: '/propiedades/propiedad2/casa.jpg',
     hasPromotion: false,
-    recentReviews: [
-      {
-        id: 'r3',
-        userName: 'Comprador Satisfecho',
-        rating: 5,
-        comment: 'Excelente vecindario y gran iluminación natural.',
-        timeAgo: 'Hace 3 días',
-      },
-    ],
+    details: '3 alcobas, 2 baños, 180m² construidos, lote 250m², garaje para 2 autos, patio trasero.',
   },
   {
     id: '3',
@@ -54,21 +37,11 @@ const mockProperties = [
     listingType: 'Arriendo',
     price: 1600000, // COP / mes
     ranking: 3,
-    averageRating: 4.6,
-    totalFeedbacks: 27,
     address: 'Transversal 4 #18-60, Barrio Puertas del Sol, Manizales',
     imageUrl: '/propiedades/propiedad3/apartamentoPS.jpg',
     hasPromotion: true,
     promotionText: 'Mes de administración gratis al firmar contrato a 1 año',
-    recentReviews: [
-      {
-        id: 'r5',
-        userName: 'Familia Pérez',
-        rating: 5,
-        comment: 'Buena distribución y vista agradable.',
-        timeAgo: 'Hace 1 día',
-      },
-    ],
+    details: '2 alcobas, 2 baños, 95m² construidos, piso 6, balcón con vista, parqueadero incluido.',
   },
   {
     id: '4',
@@ -77,24 +50,40 @@ const mockProperties = [
     listingType: 'Venta',
     price: 95000000, // COP
     ranking: 4,
-    averageRating: 4.5,
-    totalFeedbacks: 9,
     address: 'Vereda La Enea, sector Camino Real, Manizales',
     imageUrl: '/propiedades/propiedad4/lote.jpg',
     hasPromotion: false,
-    recentReviews: [
-      {
-        id: 'r7',
-        userName: 'Inversor Local',
-        rating: 4,
-        comment: 'Ubicación prometedora para proyectos pequeños.',
-        timeAgo: 'Hace 2 semanas',
-      },
-    ],
+    details: 'Lote de 5000m², con servicios públicos disponibles (agua, luz). Excelente para proyecto residencial o comercial.',
+  },{
+    id: '5',
+    name: 'Lote La Enea',
+    propertyType: 'Lote',
+    listingType: 'Venta',
+    price: 95000000, // COP
+    ranking: 5,
+    address: 'Vereda La Enea, sector Camino Real, Manizales',
+    imageUrl: '/propiedades/propiedad4/lote.jpg',
+    hasPromotion: false,
+    details: 'Lote de 5000m², con servicios públicos disponibles (agua, luz). Excelente para proyecto residencial o comercial.',
   },
 ];
 
-export default function RestaurantsPage() {
+const ITEMS_PER_PAGE = 4;
+
+export default function PropertiesPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calcular total de páginas
+  const totalPages = Math.ceil(mockProperties.length / ITEMS_PER_PAGE);
+
+  // Calcular índices para paginación
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedProperties = mockProperties.slice(startIndex, endIndex);
+
+  // Generar números de página
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Page Header */}
@@ -123,9 +112,9 @@ export default function RestaurantsPage() {
         <div className="ml-auto text-sm text-zinc-600 dark:text-zinc-400">{mockProperties.length} propiedades encontradas</div>
       </div>
 
-      {/* Restaurants List */}
+      {/* Properties List */}
       <div className="space-y-6">
-        {mockProperties.map((restaurant) => (
+        {paginatedProperties.map((restaurant) => (
           <article
             key={restaurant.id}
             className="rounded-2xl border border-zinc-200 bg-white p-6 transition-shadow hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
@@ -156,12 +145,9 @@ export default function RestaurantsPage() {
                 <div className="mb-4">
                   <div className="mb-2 flex items-start justify-between">
                     <div>
-                      <Link
-                        href={`/restaurants/${restaurant.id}`}
-                        className="text-2xl font-bold text-zinc-900 hover:text-zinc-600 dark:text-white dark:hover:text-zinc-400"
-                      >
+                      <div className="text-2xl font-bold text-zinc-900 dark:text-white">
                         {restaurant.name}
-                      </Link>
+                      </div>
                       <p className="text-sm text-zinc-600 dark:text-zinc-400">
                         {restaurant.propertyType} · {restaurant.listingType} ·{' '}
                         {restaurant.listingType === 'Arriendo'
@@ -171,15 +157,9 @@ export default function RestaurantsPage() {
                     </div>
                   </div>
 
-                  {/* Rating & Stats */}
-                  <div className="mb-3 flex flex-wrap items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <span className="text-2xl font-bold text-zinc-900 dark:text-white">
-                        {restaurant.averageRating}
-                      </span>
-                      <span className="text-yellow-500">⭐</span>
-                    </div>
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">{restaurant.totalFeedbacks} reseñas</span>
+                  {/* Property Details */}
+                  <div className="mb-3">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{restaurant.details}</p>
                   </div>
 
                   {/* Address */}
@@ -196,47 +176,21 @@ export default function RestaurantsPage() {
                   )}
                 </div>
 
-                {/* Recent Reviews */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-                    Reseñas Recientes
-                  </h3>
-                  {restaurant.recentReviews.map((review) => (
-                    <div
-                      key={review.id}
-                      className="rounded-lg border border-zinc-100 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-800"
-                    >
-                      <div className="mb-1 flex items-center gap-2">
-                        <span className="text-sm font-medium text-zinc-900 dark:text-white">
-                          {review.userName}
-                        </span>
-                        <span className="text-sm text-yellow-500">
-                          {'⭐'.repeat(review.rating)}
-                        </span>
-                        <span className="text-xs text-zinc-500 dark:text-zinc-500">
-                          {review.timeAgo}
-                        </span>
-                      </div>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                        {review.comment}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+
 
                 {/* Action Buttons */}
                 <div className="mt-4 flex flex-wrap gap-3">
                   <Link
-                    href={`/restaurants/${restaurant.id}`}
+                    href={`/propiedades/${restaurant.id}`}
                     className="rounded-lg bg-zinc-900 px-6 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100"
                   >
                     Ver Detalles
                   </Link>
                   <Link
-                    href={`/feedback/new?restaurantId=${restaurant.id}`}
+                    href={`/feedback/new?propertyId=${restaurant.id}`}
                     className="rounded-lg border border-zinc-300 px-6 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
                   >
-                    Dejar Reseña
+                    Agenda tu visita
                   </Link>
                 </div>
               </div>
@@ -246,23 +200,39 @@ export default function RestaurantsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="mt-8 flex justify-center gap-2">
-        <button className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800">
-          Anterior
-        </button>
-        <button className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-zinc-900">
-          1
-        </button>
-        <button className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800">
-          2
-        </button>
-        <button className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800">
-          3
-        </button>
-        <button className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800">
-          Siguiente
-        </button>
-      </div>
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center gap-2">
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
+          >
+            Anterior
+          </button>
+
+          {pageNumbers.map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`rounded-lg px-4 py-2 text-sm font-medium ${
+                currentPage === page
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                  : 'border border-zinc-300 text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+            disabled={currentPage === totalPages}
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   );
 }
