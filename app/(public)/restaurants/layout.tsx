@@ -57,7 +57,7 @@ export default function RestaurantsLayout({
       {/* Footer */}
       <footer className="border-t border-zinc-200 py-8 dark:border-zinc-800">
         <div className="container mx-auto px-4 text-center text-sm text-zinc-600 dark:text-zinc-400">
-          <p>© 2025 FeedbackApp. Impulsando la excelencia en el servicio.</p>
+           <p>© 2025 Inmobiliaria William Cardona. Impulsando sueños y nuevos comienzos.</p>
         </div>
       </footer>
     </div>

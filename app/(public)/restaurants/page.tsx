@@ -1,115 +1,94 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-// Mock data - Replace with actual service call
-const mockRestaurants = [
+// Mock data - propiedades en Manizales (mezcla de venta y arrendamiento)
+const mockProperties = [
   {
     id: '1',
-    name: 'La Trattoria Italiana',
-    cuisineType: 'Italiana',
+    name: 'Apartaestudio Edificio Tamanaco',
+    propertyType: 'Apartaestudio',
+    listingType: 'Arriendo',
+    price: 850000, // COP / mes
     ranking: 1,
     averageRating: 4.8,
-    totalFeedbacks: 234,
-    address: 'Calle Principal 123, Centro',
-    imageUrl: '/restaurants/trattoria.jpg',
-    hasPromotion: true,
-    promotionText: '20% OFF en pastas los martes',
+    totalFeedbacks: 34,
+    address: ' Centro, Manizales',
+    imageUrl: '/propiedades/propiedad1/tamanaco.jpg',
+    hasPromotion: false,
     recentReviews: [
       {
         id: 'r1',
-        userName: 'Feliz Comensal 234',
+        userName: 'Inquilino Feliz',
         rating: 5,
-        comment: 'Excelente pasta casera y servicio impecable. El ambiente es muy acogedor.',
+        comment: 'Lugar muy acogedor y cerca al centro, ideal para estudiantes.',
         timeAgo: 'Hace 2 días',
-      },
-      {
-        id: 'r2',
-        userName: 'María G.',
-        rating: 5,
-        comment: 'Mejor pasta carbonara que he probado. Totalmente recomendado.',
-        timeAgo: 'Hace 1 semana',
       },
     ],
   },
   {
     id: '2',
-    name: 'Sushi Master',
-    cuisineType: 'Japonesa',
+    name: 'Casa La Toscana',
+    propertyType: 'Casa',
+    listingType: 'Venta',
+    price: 420000000, // COP
     ranking: 2,
     averageRating: 4.7,
-    totalFeedbacks: 189,
-    address: 'Av. Libertador 456, Miraflores',
-    imageUrl: '/restaurants/sushi.jpg',
+    totalFeedbacks: 18,
+    address: 'Carrera 21 #30-10, Barrio Chipre, Manizales',
+    imageUrl: '/propiedades/propiedad2/casa.jpg',
     hasPromotion: false,
     recentReviews: [
       {
         id: 'r3',
-        userName: 'Alegre Visitante 567',
+        userName: 'Comprador Satisfecho',
         rating: 5,
-        comment: 'Sushi fresco y de calidad. El chef es muy profesional.',
+        comment: 'Excelente vecindario y gran iluminación natural.',
         timeAgo: 'Hace 3 días',
-      },
-      {
-        id: 'r4',
-        userName: 'Carlos R.',
-        rating: 4,
-        comment: 'Muy bueno, aunque el precio es un poco elevado.',
-        timeAgo: 'Hace 5 días',
       },
     ],
   },
   {
     id: '3',
-    name: 'El Asador Criollo',
-    cuisineType: 'Argentina',
+    name: 'Apartamento Puertas del Sol',
+    propertyType: 'Apartamento',
+    listingType: 'Arriendo',
+    price: 1600000, // COP / mes
     ranking: 3,
     averageRating: 4.6,
-    totalFeedbacks: 167,
-    address: 'Calle San Martín 789, San Isidro',
-    imageUrl: '/restaurants/asador.jpg',
+    totalFeedbacks: 27,
+    address: 'Transversal 4 #18-60, Barrio Puertas del Sol, Manizales',
+    imageUrl: '/propiedades/propiedad3/apartamentoPS.jpg',
     hasPromotion: true,
-    promotionText: 'Happy Hour 2x1 en bebidas 18-20hs',
+    promotionText: 'Mes de administración gratis al firmar contrato a 1 año',
     recentReviews: [
       {
         id: 'r5',
-        userName: 'Curioso Gourmet 123',
+        userName: 'Familia Pérez',
         rating: 5,
-        comment: 'Las mejores carnes de la zona. Cocción perfecta.',
+        comment: 'Buena distribución y vista agradable.',
         timeAgo: 'Hace 1 día',
-      },
-      {
-        id: 'r6',
-        userName: 'Ana M.',
-        rating: 4,
-        comment: 'Excelente calidad de carne. El servicio podría mejorar.',
-        timeAgo: 'Hace 4 días',
       },
     ],
   },
   {
     id: '4',
-    name: 'Vegan Delights',
-    cuisineType: 'Vegana',
+    name: 'Lote La Enea',
+    propertyType: 'Lote',
+    listingType: 'Venta',
+    price: 95000000, // COP
     ranking: 4,
     averageRating: 4.5,
-    totalFeedbacks: 143,
-    address: 'Calle Verde 321, Palermo',
-    imageUrl: '/restaurants/vegan.jpg',
+    totalFeedbacks: 9,
+    address: 'Vereda La Enea, sector Camino Real, Manizales',
+    imageUrl: '/propiedades/propiedad4/lote.jpg',
     hasPromotion: false,
     recentReviews: [
       {
         id: 'r7',
-        userName: 'Simpático Cliente 890',
-        rating: 5,
-        comment: 'Opciones veganas deliciosas y creativas. Me sorprendió gratamente.',
-        timeAgo: 'Hace 2 días',
-      },
-      {
-        id: 'r8',
-        userName: 'Laura P.',
+        userName: 'Inversor Local',
         rating: 4,
-        comment: 'Buena comida saludable. Porciones generosas.',
-        timeAgo: 'Hace 1 semana',
+        comment: 'Ubicación prometedora para proyectos pequeños.',
+        timeAgo: 'Hace 2 semanas',
       },
     ],
   },
@@ -120,36 +99,33 @@ export default function RestaurantsPage() {
     <div className="container mx-auto px-4 py-8">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="mb-2 text-4xl font-bold text-zinc-900 dark:text-white">
-          Ranking de Restaurantes
-        </h1>
+        <h1 className="mb-2 text-4xl font-bold text-zinc-900 dark:text-white">Listado de Propiedades</h1>
         <p className="text-lg text-zinc-600 dark:text-zinc-400">
-          Descubre los mejores restaurantes según opiniones reales de clientes
+          Propiedades disponibles en Manizales (venta y arriendo). Encuentra la que se ajuste a
+          tus necesidades.
         </p>
       </div>
 
       {/* Filters Bar */}
       <div className="mb-8 flex flex-wrap items-center gap-4">
         <select className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
-          <option>Todos los tipos de cocina</option>
-          <option>Italiana</option>
-          <option>Japonesa</option>
-          <option>Argentina</option>
-          <option>Vegana</option>
+          <option>Todos los tipos de inmueble</option>
+          <option>Apartamento</option>
+          <option>Casa</option>
+          <option>Apartaestudio</option>
+          <option>Lote</option>
         </select>
         <select className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
           <option>Ordenar por: Ranking</option>
           <option>Mejor valorados</option>
           <option>Más reseñas</option>
         </select>
-        <div className="ml-auto text-sm text-zinc-600 dark:text-zinc-400">
-          {mockRestaurants.length} restaurantes encontrados
-        </div>
+        <div className="ml-auto text-sm text-zinc-600 dark:text-zinc-400">{mockProperties.length} propiedades encontradas</div>
       </div>
 
       {/* Restaurants List */}
       <div className="space-y-6">
-        {mockRestaurants.map((restaurant) => (
+        {mockProperties.map((restaurant) => (
           <article
             key={restaurant.id}
             className="rounded-2xl border border-zinc-200 bg-white p-6 transition-shadow hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
@@ -187,7 +163,10 @@ export default function RestaurantsPage() {
                         {restaurant.name}
                       </Link>
                       <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                        {restaurant.cuisineType}
+                        {restaurant.propertyType} · {restaurant.listingType} ·{' '}
+                        {restaurant.listingType === 'Arriendo'
+                          ? `${restaurant.price.toLocaleString('es-CO')} COP / mes`
+                          : `${restaurant.price.toLocaleString('es-CO')} COP`}
                       </p>
                     </div>
                   </div>
@@ -200,9 +179,7 @@ export default function RestaurantsPage() {
                       </span>
                       <span className="text-yellow-500">⭐</span>
                     </div>
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      {restaurant.totalFeedbacks} reseñas
-                    </span>
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400">{restaurant.totalFeedbacks} reseñas</span>
                   </div>
 
                   {/* Address */}
