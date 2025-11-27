@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'FeedbackApp - Plataforma de Feedback para Restaurantes',
-  description: 'Comparte tu experiencia y descubre los mejores restaurantes',
+  title: 'Inmobiliaria William Cardona - Listado de Propiedades',
+  description: 'Explora nuestro catálogo de propiedades en Manizales: apartamentos, casas, lotes y más',
 };
 
-export default function RestaurantsLayout({
+export default function PropertiesLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -30,16 +30,10 @@ export default function RestaurantsLayout({
           </div>
           <div className="flex items-center gap-4">
             <a
-              href="#ranking"
+              href="/"
               className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
             >
-              Ranking
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-            >
-              Cómo Funciona
+              Volver a Inicio
             </a>
             <a
               href="/admin"

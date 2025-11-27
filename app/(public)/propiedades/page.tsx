@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getStoredProperties, type Property } from '@/app/admin/utils/propertyStorage';
 
 // Mock data - propiedades en Manizales (mezcla de venta y arrendamiento)
 const mockProperties = [
@@ -72,14 +73,35 @@ const ITEMS_PER_PAGE = 4;
 
 export default function PropertiesPage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [allProperties, setAllProperties] = useState<Property[]>([]);
+
+  // Cargar propiedades de localStorage + mock data
+  useEffect(() => {
+    const storedProps = getStoredProperties();
+    // Convertir mock properties al formato completo
+    const mockWithFullData = mockProperties.map((p: any) => ({
+      ...p,
+      description: p.description || p.details,
+      features: p.features || [],
+      images: p.imageUrl ? [{ id: '1', data: p.imageUrl, name: 'image' }] : [],
+      createdAt: new Date().toISOString(),
+    }));
+    
+    const combinedProps = [...storedProps, ...mockWithFullData];
+    // Eliminar duplicados por ID (las de localStorage tienen prioridad)
+    const uniqueProps = Array.from(
+      new Map(combinedProps.map((p) => [p.id, p])).values()
+    ) as Property[];
+    setAllProperties(uniqueProps);
+  }, []);
 
   // Calcular total de páginas
-  const totalPages = Math.ceil(mockProperties.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(allProperties.length / ITEMS_PER_PAGE);
 
   // Calcular índices para paginación
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedProperties = mockProperties.slice(startIndex, endIndex);
+  const paginatedProperties = allProperties.slice(startIndex, endIndex);
 
   // Generar números de página
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -109,7 +131,7 @@ export default function PropertiesPage() {
           <option>Mejor valorados</option>
           <option>Más reseñas</option>
         </select>
-        <div className="ml-auto text-sm text-zinc-600 dark:text-zinc-400">{mockProperties.length} propiedades encontradas</div>
+        <div className="ml-auto text-sm text-zinc-600 dark:text-zinc-400">{allProperties.length} propiedades encontradas</div>
       </div>
 
       {/* Properties List */}
@@ -122,16 +144,20 @@ export default function PropertiesPage() {
             <div className="flex flex-col gap-6 lg:flex-row">
               {/* Restaurant Image */}
               <div className="relative h-48 w-full shrink-0 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 lg:h-auto lg:w-64">
-                {restaurant.imageUrl ? (
-                  <Image
-                    src={restaurant.imageUrl}
+                {restaurant.images && restaurant.images.length > 0 ? (
+                  <img
+                    src={restaurant.images[0].data}
                     alt={restaurant.name}
-                    fill
-                    className="object-cover"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      // Si la imagen falla, mostrar el icono
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
                   />
-                ) : (
+                ) : null}
+                {(!restaurant.images || restaurant.images.length === 0) && (
                   <div className="flex h-full items-center justify-center text-6xl">
-                    🍽️
+                    🏠
                   </div>
                 )}
                 {/* Ranking Badge */}
